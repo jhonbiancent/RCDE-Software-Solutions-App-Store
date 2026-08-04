@@ -1,5 +1,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react"
+import Link, { type LinkProps } from "next/link"
 
 import { cn } from "@/lib/utils"
 
@@ -40,19 +42,44 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+type ButtonVariantProps = VariantProps<typeof buttonVariants>;
+
+// Base native button
+type NativeButtonProps = ButtonPrimitive.Props & ButtonVariantProps & { asChild?: false; href?: undefined };
+
+// Link button (renders as Next.js Link)
+type LinkButtonProps = Omit<LinkProps, "href"> &
+  ButtonVariantProps & {
+    asChild?: false;
+    href: string;
+    target?: string;
+    rel?: string;
+    children?: React.ReactNode;
+    className?: string;
+  };
+
+export type ButtonProps = NativeButtonProps | LinkButtonProps;
+
+function Button({ className, variant = "default", size = "default", ...props }: ButtonProps) {
+  const classes = cn(buttonVariants({ variant, size, className }));
+
+  if ("href" in props && props.href) {
+    const { href, target, rel, children, ...rest } = props as LinkButtonProps;
+    return (
+      <Link href={href} target={target} rel={rel} className={classes} {...(rest as object)}>
+        {children}
+      </Link>
+    );
+  }
+
+  const { ...rest } = props as NativeButtonProps;
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
+      className={classes}
+      {...rest}
     />
-  )
+  );
 }
 
 export { Button, buttonVariants }
