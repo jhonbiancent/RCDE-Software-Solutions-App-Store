@@ -1,6 +1,5 @@
 // src/types/index.ts
-
-import type { App, Review, AppCategory, AppStatus } from "@prisma/client";
+import type { App, Review, AppCategory, AppStatus } from "../generated/prisma/client";
 
 export type { App, Review, AppCategory, AppStatus };
 
@@ -23,7 +22,7 @@ export type ReleaseAsset = {
 export type Release = {
   tag_name: string;
   name: string;
-  body: string; // changelog markdown
+  body: string;
   published_at: string;
   assets: ReleaseAsset[];
   html_url: string;

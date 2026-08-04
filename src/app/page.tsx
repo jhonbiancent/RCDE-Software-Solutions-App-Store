@@ -1,69 +1,67 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { AppGrid } from "@/components/app-grid";
+import { prisma } from "@/lib/prisma";
+import { AppWithRating } from "@/types";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const featuredApps = await prisma.app.findMany({
+    where: { status: "PUBLISHED", featured: true },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+    include: { _count: { select: { reviews: true } } },
+  });
+
+  const appsWithRatings = await Promise.all(
+    featuredApps.map(async (app) => {
+      const avg = await prisma.review.aggregate({
+        where: { appId: app.id },
+        _avg: { rating: true },
+      });
+      return { ...app, averageRating: avg._avg.rating || null } as AppWithRating;
+    })
+  );
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col min-h-screen">
+      {/* Hero */}
+      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-muted/40">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-500">
+                Welcome to AppShelf
+              </h1>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                A personal portfolio and app store showcasing web apps, desktop software, and websites I've built.
+              </p>
+            </div>
+            <div className="flex gap-4 flex-wrap justify-center">
+              <Button href="/apps" size="lg">Browse All Apps</Button>
+              <Button href="/about" variant="outline" size="lg">About Me</Button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Featured Apps */}
+      <section className="w-full py-12 md:py-24 lg:py-32">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Featured Projects</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
+              Check out some of my best work below.
+            </p>
+          </div>
+          <div className="mx-auto mt-12 max-w-5xl">
+            <AppGrid apps={appsWithRatings} />
+          </div>
+          <div className="flex justify-center mt-12">
+            <Button href="/apps" variant="secondary">View All →</Button>
+          </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

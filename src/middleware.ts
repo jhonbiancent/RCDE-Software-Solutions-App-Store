@@ -1,25 +1,23 @@
 import { auth } from "@/lib/auth";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-export default auth((req) => {
-  const isAdmin = (req.auth?.user as any)?.isAdmin;
-  const isAuthPage = req.nextUrl.pathname.startsWith("/api/auth");
+export async function middleware(req: NextRequest) {
+  const session = await auth();
+  const isAdminPath = req.nextUrl.pathname.startsWith("/admin");
 
-  // Protect /admin routes
-  if (req.nextUrl.pathname.startsWith("/admin")) {
-    if (!req.auth) {
-      // Redirect to login if not authenticated
-      const newUrl = new URL("/api/auth/signin", req.nextUrl.origin);
-      return Response.redirect(newUrl);
+  if (isAdminPath) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/api/auth/signin", req.nextUrl.origin));
     }
-    
-    if (!isAdmin) {
-      // Redirect to home if not admin
-      return Response.redirect(new URL("/", req.nextUrl.origin));
+    if (!(session.user as any)?.isAdmin) {
+      return NextResponse.redirect(new URL("/", req.nextUrl.origin));
     }
   }
-});
 
-// Optionally, don't invoke Middleware on some paths
+  return NextResponse.next();
+}
+
 export const config = {
-  matcher: ["/((?!api/github|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/admin/:path*"],
 };
