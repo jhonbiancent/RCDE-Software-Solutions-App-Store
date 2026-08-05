@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AppWindow, Star } from "lucide-react";
 import { AppWithRating } from "@/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -6,22 +7,17 @@ import { Badge } from "./ui/badge";
 export function AppCard({ app }: { app: AppWithRating }) {
   return (
     <Link href={`/apps/${app.slug}`}>
-      <Card className="h-full overflow-hidden transition-all hover:shadow-md hover:border-primary/50 flex flex-col cursor-pointer">
-        {app.coverImage ? (
-          <div className="aspect-video w-full overflow-hidden bg-muted">
-            <img src={app.coverImage} alt={app.name} className="object-cover w-full h-full" />
-          </div>
-        ) : (
-          <div className="aspect-video w-full bg-muted flex items-center justify-center text-muted-foreground">
-            No Image
-          </div>
-        )}
+      <Card className="h-full cursor-pointer overflow-hidden bg-white transition-all hover:border-primary/50 hover:shadow-md flex flex-col">
         <CardHeader>
-          <CardTitle className="flex justify-between items-center">
-            <span>{app.name}</span>
+          <div className="mb-3 flex size-14 items-center justify-center rounded-xl border bg-muted text-muted-foreground">
+            <AppWindow className="size-6" aria-hidden="true" />
+          </div>
+          <CardTitle className="flex items-center justify-between gap-3">
+            <span className="min-w-0 truncate">{app.name}</span>
             {app.averageRating ? (
-              <span className="text-sm font-medium flex items-center gap-1 text-yellow-500">
-                ★ {app.averageRating.toFixed(1)}
+              <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-yellow-500">
+                <Star className="size-4 fill-current" aria-hidden="true" />
+                {app.averageRating.toFixed(1)}
               </span>
             ) : null}
           </CardTitle>
@@ -37,7 +33,7 @@ export function AppCard({ app }: { app: AppWithRating }) {
             ))}
           </div>
         </CardContent>
-        <CardFooter className="text-xs text-muted-foreground flex justify-between">
+        <CardFooter className="flex justify-between text-xs text-muted-foreground">
           <span>{app.viewCount} views</span>
           {app._count?.reviews ? <span>{app._count.reviews} reviews</span> : null}
         </CardFooter>
