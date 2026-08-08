@@ -8,14 +8,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum AppCategory {
-  WEB_APP
-  DESKTOP_APP
-  WEBSITE
-  MOBILE_APP
-  LIBRARY_TOOL
-}
-
 enum AppStatus {
   DRAFT
   PUBLISHED
@@ -28,15 +20,13 @@ model App {
   name          String
   tagline       String?
   description   String      @db.Text
-  caseStudy     String?     @db.Text   // longer portfolio write-up: problem/approach/stack/lessons
-  category      AppCategory
+  platforms     String[]              // ["Android", "iOS", "WebApp"]
+  categories    String[]              // ["Business", "Finance", "Games"]
   techStack     String[]              // ["Next.js", "Prisma", "Postgres"]
-  githubOwner   String?               // for release/download-count lookups
-  githubRepo    String?
   liveUrl       String?               // for web apps/websites
-  coverImage    String?
+  downloadUrl   String?               // for mobile app store/download links
+  iconUrl       String?
   screenshots   String[]              // array of image URLs
-  videoUrl      String?               // demo video, e.g. YouTube embed URL
   status        AppStatus   @default(DRAFT)
   featured      Boolean     @default(false)
   viewCount     Int         @default(0)
@@ -47,7 +37,6 @@ model App {
   comments      Comment[]             // FUTURE: only if you drop Giscus for native comments
 
   @@index([status])
-  @@index([category])
 }
 
 model Review {

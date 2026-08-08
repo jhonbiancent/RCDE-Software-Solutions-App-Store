@@ -1,0 +1,3 @@
+ALTER TABLE "App" DROP COLUMN "caseStudy";
+ALTER TABLE "App" DROP COLUMN "coverImage";
+ALTER TABLE "App" DROP COLUMN "videoUrl";
