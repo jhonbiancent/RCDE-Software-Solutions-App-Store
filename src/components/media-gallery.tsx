@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { X } from "lucide-react";
 
 interface MediaGalleryProps {
@@ -41,9 +42,12 @@ export function MediaGallery({ screenshots }: MediaGalleryProps) {
             >
               <X className="size-4" aria-hidden="true" />
             </button>
-            <img
+            <Image
               src={activeImage}
               alt="Screenshot full size"
+              width={1920}
+              height={1080}
+              sizes="(max-width: 768px) 90vw, 70vw"
               className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg"
             />
           </div>
@@ -56,12 +60,14 @@ export function MediaGallery({ screenshots }: MediaGalleryProps) {
           <button
             key={url}
             onClick={() => openLightbox(url)}
-            className="aspect-video w-[75%] sm:w-[45%] shrink-0 snap-start bg-muted rounded-xl overflow-hidden border shadow-sm transition-transform hover:scale-[1.02] cursor-zoom-in md:w-auto md:shrink"
+            className="relative aspect-video w-[75%] sm:w-[45%] shrink-0 snap-start bg-muted rounded-xl overflow-hidden border shadow-sm transition-transform hover:scale-[1.02] cursor-zoom-in md:w-auto md:shrink"
           >
-            <img
+            <Image
               src={url}
               alt={`Screenshot ${i + 1}`}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 75vw, 33vw"
+              className="object-cover"
               loading="lazy"
             />
           </button>

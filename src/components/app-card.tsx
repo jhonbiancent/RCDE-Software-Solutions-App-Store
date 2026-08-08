@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   AppWindow,
@@ -45,9 +46,11 @@ export function AppCard({ app }: { app: AppWithRating }) {
             <div className="flex gap-4">
               <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-muted">
                 {app.iconUrl ? (
-                  <img
+                  <Image
                     src={app.iconUrl}
                     alt={`${app.name} icon`}
+                    width={64}
+                    height={64}
                     className="h-full w-full object-cover"
                   />
                 ) : (

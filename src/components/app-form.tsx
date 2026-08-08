@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -425,11 +426,21 @@ export function AppForm({ initialData }: { initialData?: any }) {
               </Label>
               <div className="flex items-center gap-3">
                 {iconPreview ? (
-                  <img
-                    src={iconPreview}
-                    alt="Icon preview"
-                    className="h-12 w-12 rounded-md border border-zinc-200 object-cover dark:border-zinc-700"
-                  />
+                  iconPreview.startsWith("http") ? (
+                    <Image
+                      src={iconPreview}
+                      alt="Icon preview"
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-md border border-zinc-200 object-cover dark:border-zinc-700"
+                    />
+                  ) : (
+                    <img
+                      src={iconPreview}
+                      alt="Icon preview"
+                      className="h-12 w-12 rounded-md border border-zinc-200 object-cover dark:border-zinc-700"
+                    />
+                  )
                 ) : (
                   <div className="flex h-12 w-12 items-center justify-center rounded-md border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
                     <ImagePlus className="h-5 w-5 text-zinc-300 dark:text-zinc-600" />
@@ -462,7 +473,7 @@ export function AppForm({ initialData }: { initialData?: any }) {
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                   {existingScreenshots.map((url, i) => (
                     <div key={`existing-${i}`} className="group relative aspect-video overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700">
-                      <img src={url} alt={`Screenshot ${i + 1}`} className="h-full w-full object-cover" />
+                      <Image src={url} alt={`Screenshot ${i + 1}`} fill sizes="25vw" className="object-cover" />
                       <button
                         type="button"
                         onClick={() => removeExistingScreenshot(i)}

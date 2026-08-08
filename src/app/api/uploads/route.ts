@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
     const ext = path.extname(file.name) || ".png";
     const objectPath = `apps/${slug}/${folder}/${crypto.randomUUID()}${ext}`;
-    const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}`;
+    const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}?cacheControl=31536000`;
     const res = await fetch(uploadUrl, {
       method: "POST",
       headers: {

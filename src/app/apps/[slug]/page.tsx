@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { DownloadButton } from "@/components/download-button";
@@ -47,7 +48,7 @@ export default async function AppDetailPage({
       <div className="flex flex-col md:flex-row gap-6 items-start">
         <div className="w-24 h-24 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground border shrink-0 overflow-hidden">
           {app.iconUrl ? (
-            <img src={app.iconUrl} alt={`${app.name} icon`} className="h-full w-full object-cover" />
+            <Image src={app.iconUrl} alt={`${app.name} icon`} width={96} height={96} className="h-full w-full object-cover" />
           ) : (
             <AppWindow className="size-10" aria-hidden="true" />
           )}

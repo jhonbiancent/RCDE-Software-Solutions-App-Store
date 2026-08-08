@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   Plus,
@@ -116,7 +117,7 @@ export default async function AdminDashboard() {
                       <div className="flex items-center gap-4">
                         <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg border bg-muted">
                           {app.iconUrl ? (
-                            <img src={app.iconUrl} alt={app.name} className="h-full w-full object-cover" />
+                            <Image src={app.iconUrl} alt={app.name} width={44} height={44} className="h-full w-full object-cover" />
                           ) : (
                             <LayoutGrid className="h-5 w-5 text-muted-foreground" />
                           )}
