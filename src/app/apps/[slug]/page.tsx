@@ -42,7 +42,7 @@ export default async function AppDetailPage({
   prisma.app.update({ where: { id: app.id }, data: { viewCount: { increment: 1 } } }).catch(() => {});
 
   return (
-    <div className="container py-10 max-w-4xl mx-auto space-y-10">
+    <div className="container mx-auto max-w-4xl px-4 py-10 space-y-10">
       {/* Header */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
         <div className="w-24 h-24 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground border shrink-0 overflow-hidden">

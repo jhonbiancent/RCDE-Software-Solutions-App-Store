@@ -51,12 +51,12 @@ export function MediaGallery({ screenshots }: MediaGalleryProps) {
       </dialog>
 
       <h2 className="text-2xl font-bold">Showcase Gallery</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:snap-none">
         {screenshots.map((url, i) => (
           <button
             key={url}
             onClick={() => openLightbox(url)}
-            className="aspect-video bg-muted rounded-xl overflow-hidden border shadow-sm transition-transform hover:scale-[1.02] cursor-zoom-in"
+            className="aspect-video w-[75%] sm:w-[45%] shrink-0 snap-start bg-muted rounded-xl overflow-hidden border shadow-sm transition-transform hover:scale-[1.02] cursor-zoom-in md:w-auto md:shrink"
           >
             <img
               src={url}
