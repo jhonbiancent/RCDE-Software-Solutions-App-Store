@@ -1,7 +1,7 @@
 // src/types/index.ts
-import type { App, Review, AppCategory, AppStatus } from "../generated/prisma/client";
+import type { App, Review, AppStatus } from "../generated/prisma/client";
 
-export type { App, Review, AppCategory, AppStatus };
+export type { App, Review, AppStatus };
 
 /** App with pre-computed average rating */
 export type AppWithRating = App & {

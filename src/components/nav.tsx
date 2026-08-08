@@ -15,7 +15,6 @@ import {
 
 const navLinks = [
   { href: "/websites", label: "Websites", icon: Globe },
-  { href: "/webapps", label: "Web Apps", icon: Layers },
   { href: "/desktop", label: "Desktop", icon: Monitor },
   { href: "/about", label: "About", icon: Info },
   { href: "/contact", label: "Contact", icon: Mail },
@@ -26,7 +25,7 @@ export async function Nav() {
   const isAdmin = Boolean((session?.user as { isAdmin?: boolean } | undefined)?.isAdmin);
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/80">
       <div className="container mx-auto grid h-16 max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold">
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -53,7 +52,9 @@ export async function Nav() {
           {isAdmin && (
             <Button href="/admin" variant="outline" size="sm" className="h-10">
               <LayoutDashboard className="size-4 " aria-hidden="true" />
-              Dashboard
+              <p className="hidden md:inline">
+                Dashboard
+              </p>
             </Button>
           )}
           {session ? (

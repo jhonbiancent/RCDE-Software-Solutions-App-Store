@@ -11,6 +11,19 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   try {
     const { id } = await params;
     const json = await req.json();
+    const screenshots =
+      json.screenshots === undefined
+        ? undefined
+        : typeof json.screenshots === "string"
+          ? json.screenshots.split(/\r?\n/).map((url: string) => url.trim()).filter(Boolean)
+          : json.screenshots;
+
+    if (screenshots && screenshots.length > 6) {
+      return new NextResponse("Maximum 6 screenshots allowed", { status: 400 });
+    }
+
+    const platforms = Array.isArray(json.platforms) ? json.platforms : [];
+    const categories = Array.isArray(json.categories) ? json.categories : [];
     
     const app = await prisma.app.update({
       where: { id },
@@ -19,13 +32,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         slug: json.slug,
         tagline: json.tagline,
         description: json.description,
-        caseStudy: json.caseStudy,
-        category: json.category,
+        platforms,
+        categories,
         techStack: json.techStack ? (typeof json.techStack === 'string' ? json.techStack.split(",").map((t: string) => t.trim()) : json.techStack) : [],
-        githubOwner: json.githubOwner || null,
-        githubRepo: json.githubRepo || null,
         liveUrl: json.liveUrl || null,
-        coverImage: json.coverImage || null,
+        downloadUrl: json.downloadUrl || null,
+        iconUrl: json.iconUrl || null,
+        ...(screenshots ? { screenshots } : {}),
         status: json.status,
         featured: json.featured,
       },

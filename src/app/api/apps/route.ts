@@ -10,6 +10,16 @@ export async function POST(req: Request) {
 
   try {
     const json = await req.json();
+    const screenshots = json.screenshots
+      ? json.screenshots.split(/\r?\n/).map((url: string) => url.trim()).filter(Boolean)
+      : [];
+    const platforms = Array.isArray(json.platforms) ? json.platforms : [];
+    const categories = Array.isArray(json.categories) ? json.categories : [];
+
+    if (screenshots.length > 6) {
+      return new NextResponse("Maximum 6 screenshots allowed", { status: 400 });
+    }
+
     // In a real app, use Zod to validate `json`
     const app = await prisma.app.create({
       data: {
@@ -17,13 +27,13 @@ export async function POST(req: Request) {
         slug: json.slug,
         tagline: json.tagline,
         description: json.description,
-        caseStudy: json.caseStudy,
-        category: json.category,
+        platforms,
+        categories,
         techStack: json.techStack ? json.techStack.split(",").map((t: string) => t.trim()) : [],
-        githubOwner: json.githubOwner || null,
-        githubRepo: json.githubRepo || null,
         liveUrl: json.liveUrl || null,
-        coverImage: json.coverImage || null,
+        downloadUrl: json.downloadUrl || null,
+        iconUrl: json.iconUrl || null,
+        screenshots,
         status: json.status || "DRAFT",
         featured: json.featured || false,
       },

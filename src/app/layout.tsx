@@ -17,9 +17,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
-        className={`${inter.className} min-h-screen bg-background antialiased flex flex-col`}
+        className={`${inter.className} min-h-screen bg-white text-foreground antialiased flex flex-col`}
       >
         <Nav />
         <main className="flex-1">

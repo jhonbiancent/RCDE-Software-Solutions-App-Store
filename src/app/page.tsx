@@ -2,19 +2,19 @@ import { Button } from "@/components/ui/button";
 import { AppGrid } from "@/components/app-grid";
 import { prisma } from "@/lib/prisma";
 import { AppWithRating } from "@/types";
+import { ArrowRight, Grid3X3, UserRound } from "lucide-react";
 
 export const revalidate = 60;
 
 export default async function Home() {
-  const featuredApps = await prisma.app.findMany({
-    where: { status: "PUBLISHED", featured: true },
+  const apps = await prisma.app.findMany({
+    where: { status: "PUBLISHED" },
     orderBy: { createdAt: "desc" },
-    take: 3,
     include: { _count: { select: { reviews: true } } },
   });
 
   const appsWithRatings = await Promise.all(
-    featuredApps.map(async (app) => {
+    apps.map(async (app) => {
       const avg = await prisma.review.aggregate({
         where: { appId: app.id },
         _avg: { rating: true },
@@ -24,41 +24,51 @@ export default async function Home() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero */}
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-muted/40">
+    <div className="flex min-h-screen flex-col bg-white px-20">
+      <section className="w-full border-b bg-white py-16 md:py-24 lg:py-28">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-500">
-                Welcome to AppShelf
+          <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
+            <div className="space-y-4">
+              <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                Personal app store and portfolio
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                AppShelf
               </h1>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                A personal portfolio and app store showcasing web apps, desktop software, and websites I've built.
+              <p className="mx-auto max-w-175 text-muted-foreground md:text-xl">
+                A personal portfolio and app store showcasing web apps, desktop software, and websites I&apos;ve built.
               </p>
             </div>
-            <div className="flex gap-4 flex-wrap justify-center">
-              <Button href="/apps" size="lg">Browse All Apps</Button>
-              <Button href="/about" variant="outline" size="lg">About Me</Button>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button href="/apps" size="lg">
+                <Grid3X3 className="size-4" aria-hidden="true" />
+                Browse Apps
+              </Button>
+              <Button href="/about" variant="outline" size="lg">
+                <UserRound className="size-4" aria-hidden="true" />
+                About Me
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Apps */}
-      <section className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Featured Projects</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
-              Check out some of my best work below.
-            </p>
+      <section className="w-full bg-white py-12 md:py-16">
+        <div className="container px-4 md:px-16">
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tight">Apps</h2>
+              <p className="max-w-180 text-muted-foreground">
+                Browse the software, tools, and websites currently published in the store.
+              </p>
+            </div>
+            <Button href="/apps" variant="secondary">
+              View full apps page
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Button>
           </div>
-          <div className="mx-auto mt-12 max-w-5xl">
+          <div className="mx-auto max-w-6xl">
             <AppGrid apps={appsWithRatings} />
-          </div>
-          <div className="flex justify-center mt-12">
-            <Button href="/apps" variant="secondary">View All →</Button>
           </div>
         </div>
       </section>

@@ -30,10 +30,10 @@ export default async function AppsPage() {
   );
 
   return (
-    <div className="container py-10">
+    <div className="container bg-white py-10">
       <div className="mb-8 space-y-4">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">All Apps & Projects</h1>
-        <p className="text-xl text-muted-foreground">Browse all the software, tools, and websites I've built.</p>
+        <p className="text-xl text-muted-foreground">Browse all the software, tools, and websites I&apos;ve built.</p>
       </div>
       <AppGrid apps={appsWithRatings} />
     </div>

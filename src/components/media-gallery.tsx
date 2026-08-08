@@ -50,7 +50,7 @@ export function MediaGallery({ screenshots }: MediaGalleryProps) {
         )}
       </dialog>
 
-      <h2 className="text-2xl font-bold">Screenshots</h2>
+      <h2 className="text-2xl font-bold">Showcase Gallery</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {screenshots.map((url, i) => (
           <button
